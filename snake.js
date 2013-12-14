@@ -2,8 +2,8 @@ $(document).ready(function () {
     // First we'll initialize some variables
 
     var moves = [
-        {x: 0, y: -1, hit: 1},
-        {x: 1, y: 0, hit: 0}
+        ['left', 0],
+        ['up', 1]
     ]; // This is the array of moves that are initialized every loop.
 
     var pieces = [
@@ -32,30 +32,33 @@ $(document).ready(function () {
     }
 
     function loop() {
-        var p = 0, move, m;
+        var p = 0 , move, m;
 
         for (var i = 0; i < moves.length; i++) {
             move = moves[i];
-            m = 0;
+            var direction = move[0], times = move[1];
 
-            for (p; pieces[p] && (m <= move.hit - pieces.length + 1 || moves[i + 1] === undefined); m++, p++) {
-                pieces[p][0] += move.x;
-                pieces[p][1] += move.y;
+            if (moves[i + 1] === undefined)
+                times = pieces.length;
+
+            for (var t = 0; t < times && pieces[p]; t++, p++) {
+
+                if (direction === 'left')
+                    pieces[p][0] -= 1;
+                else if (direction === 'right')
+                    pieces[p][0] += 1;
+                else if (direction === 'up')
+                    pieces[p][1] -= 1;
+                else if (direction === 'down')
+                    pieces[p][1] += 1;
             }
 
-            move.hit++;
-
-            console.log(move);
-
-            if (move.hit > pieces.length && moves[i + 1] !== undefined) {
-                moves.splice(i, 1);
-                alert(1);
-            }
+            move[1] += 1;
         }
 
         renderSnake();
 
-        if((pieces[0][0] < 20 && pieces[0][0] > -20) && (pieces[0][1] < 20 && pieces[0][1] > -20))
+        if ((pieces[0][0] < 20 && pieces[0][0] > -19) && (pieces[0][1] < 20 && pieces[0][1] > -20))
             setTimeout(loop, 120);
     }
 
