@@ -16,36 +16,50 @@ $(document).ready(function () {
         var c = document.getElementById('snake'), canvas = c.getContext('2d');
 
         canvas.clearRect(0, 0, c.width, c.height);
+        canvas.fillStyle = '#F4F4F4';
+        canvas.fillRect(8, 8, 284, 284);
 
         for (var i = 0; i < pieces.length; i++) {
             var posx, posy, piece = pieces[i];
 
-            canvas.fillStyle = '#FFFFFF';
+            canvas.fillStyle = '#333333';
 
-            posx = 150 + (piece[0] * 7);
-            posy = 150 + (piece[1] * 7);
+            posx = 140 + (piece[0] * 7);
+            posy = 140 + (piece[1] * 7);
 
             canvas.fillRect(posx, posy, 5, 5);
         }
     }
 
     function loop() {
-        var p = pieces.length - 1, move, m;
+        var p = 0, move, m;
 
         for (var i = 0; i < moves.length; i++) {
             move = moves[i];
             m = 0;
 
-            for (p; pieces[p] && (m <= move.hit || moves[i + 1] === undefined); m++, p--) {
+            for (p; pieces[p] && (m <= move.hit - pieces.length + 1 || moves[i + 1] === undefined); m++, p++) {
                 pieces[p][0] += move.x;
                 pieces[p][1] += move.y;
+            }
+
+            move.hit++;
+
+            console.log(move);
+
+            if (move.hit > pieces.length && moves[i + 1] !== undefined) {
+                moves.splice(i, 1);
+                alert(1);
             }
         }
 
         renderSnake();
 
-        setTimeout(loop, 120);
+        if((pieces[0][0] < 20 && pieces[0][0] > -20) && (pieces[0][1] < 20 && pieces[0][1] > -20))
+            setTimeout(loop, 120);
     }
 
     loop();
 });
+
+//280
