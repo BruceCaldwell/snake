@@ -25,7 +25,7 @@ $(document).ready(function () {
 
         canvas.clearRect(0, 0, c.width, c.height);
         canvas.fillStyle = '#F4F4F4';
-        canvas.fillRect(8, 8, 144, 144);
+        canvas.fillRect(7, 7, 145, 145);
 
         canvas.fillStyle = '#BC2827';
         canvas.fillRect(70 + (cherry[0] * 7), 70 + (cherry[1] * 7), 5, 5);
@@ -71,8 +71,17 @@ $(document).ready(function () {
 
         cherry = [r1, r2];
 
-        if($.inArray(cherry, pieces) !== -1) // To prevent the cherry from being under the snake
+        if(cherryIntersects())
             addCherry();
+    };
+
+    var cherryIntersects = function() {
+        pieces.forEach(function(o) {
+            if(o[0] === cherry[0] && o[1] === cherry[1])
+                return true;
+        });
+
+        return false;
     };
 
     function hasCollisions(a) {
