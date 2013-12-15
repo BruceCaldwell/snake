@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // First we'll initialize some variables
 
-    var snakedir = 'none', cherry = [];
+    var snakedir = 'none', cherry = [], addAnother = 0;
 
     var pieces = [
         [0, 0],
@@ -25,14 +25,23 @@ $(document).ready(function () {
 
         canvas.clearRect(0, 0, c.width, c.height);
         canvas.fillStyle = '#F4F4F4';
-        canvas.fillRect(8, 8, 284, 284);
+        canvas.fillRect(8, 8, 144, 144);
 
         canvas.fillStyle = '#BC2827';
-        canvas.fillRect(140 + (cherry[0] * 7), 140 + (cherry[1] * 7), 5, 5);
+        canvas.fillRect(70 + (cherry[0] * 7), 70 + (cherry[1] * 7), 5, 5);
 
         if (pieces[0][0] === cherry[0] && pieces[0][1] === cherry[1]) {
-            pieces.push([pieces[pieces.length - 1][0] + 1, pieces[pieces.length - 1][1]]);
+            addAnother = 1;
             addCherry();
+        }
+
+        if(hasCollisions(pieces, true)) {
+            pieces = [
+                [0, 0],
+                [0, 1],
+                [0, 2]
+            ];
+            snakedir = 'none';
         }
 
         for (var i = 0; i < pieces.length; i++) {
@@ -40,7 +49,7 @@ $(document).ready(function () {
 
             canvas.fillStyle = '#333333';
 
-            if (/*hasCollisions(pieces, true) || */ (piece[0] > 20 || piece[0] < -19) || (piece[1] > 20 || piece[1] < -19)) { // Reset
+            if ((piece[0] > 10 || piece[0] < -9) || (piece[1] > 10 || piece[1] < -9)) { // Reset
                 pieces = [
                     [0, 0],
                     [0, 1],
@@ -49,16 +58,16 @@ $(document).ready(function () {
                 snakedir = 'none';
             }
 
-            posx = 140 + (piece[0] * 7);
-            posy = 140 + (piece[1] * 7);
+            posx = 70 + (piece[0] * 7);
+            posy = 70 + (piece[1] * 7);
 
             canvas.fillRect(posx, posy, 5, 5);
         }
     }
 
     var addCherry = function () {
-        var r1 = Math.floor(Math.random() * (40)) - 19;
-        var r2 = Math.floor(Math.random() * (40)) - 19;
+        var r1 = Math.floor(Math.random() * (20)) - 9;
+        var r2 = Math.floor(Math.random() * (20)) - 9;
 
         cherry = [r1, r2];
     };
@@ -106,7 +115,11 @@ $(document).ready(function () {
 
         if (snakedir !== 'none') {
             pieces.unshift(newpiece); // Add new piece in the right direction
-            pieces.pop(); // Get rid of last piece
+            if (!addAnother)
+                pieces.pop(); // Get rid of last piece
+            else
+                addAnother = 0;
+
         }
 
         renderSnake();
