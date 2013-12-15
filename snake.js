@@ -71,7 +71,7 @@ $(document).ready(function () {
 
         cherry = [r1, r2];
 
-        if(pieces.indexOf(cherry) !== -1) // To prevent the cherry from being under the snake
+        if($.inArray(cherry, pieces) !== -1) // To prevent the cherry from being under the snake
             addCherry();
     };
 
@@ -124,7 +124,7 @@ $(document).ready(function () {
 
         renderSnake();
 
-        setTimeout(loop, 120);
+        setTimeout(loop, 100);
     }
 
     addCherry();
