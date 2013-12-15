@@ -1,24 +1,22 @@
 $(document).ready(function () {
     // First we'll initialize some variables
 
-    var snakedir = 'none';
+    var snakedir = 'none', cherry = [];
 
     var pieces = [
         [0, 0],
         [0, 1],
-        [0, 2],
-        [0, 3],
-        [0, 4]
+        [0, 2]
     ]; // Array of snake pieces and their positions, starts with one.
 
     $(document).keydown(function (e) {
-        if (e.keyCode == 37 && snakedir != 'right')
+        if (e.keyCode === 37 && snakedir !== 'right')
             snakedir = 'left';
-        else if (e.keyCode == 39 && snakedir != 'left')
+        else if (e.keyCode === 39 && snakedir !== 'left')
             snakedir = 'right';
-        else if (e.keyCode == 38 && snakedir != 'down')
+        else if (e.keyCode === 38 && snakedir !== 'down')
             snakedir = 'up';
-        else if (e.keyCode == 40 && snakedir != 'up')
+        else if (e.keyCode === 40 && snakedir !== 'up')
             snakedir = 'down';
     });
 
@@ -29,14 +27,24 @@ $(document).ready(function () {
         canvas.fillStyle = '#F4F4F4';
         canvas.fillRect(8, 8, 284, 284);
 
+        canvas.fillStyle = '#BC2827';
+        canvas.fillRect(140 + (cherry[0] * 7), 140 + (cherry[1] * 7), 5, 5);
+
+        if (pieces[0][0] === cherry[0] && pieces[0][1] === cherry[1]) {
+            pieces.push([pieces[pieces.length - 1][0] + 1, pieces[pieces.length - 1][1]]);
+            addCherry();
+        }
+
         for (var i = 0; i < pieces.length; i++) {
             var posx, posy, piece = pieces[i];
 
             canvas.fillStyle = '#333333';
 
-            if (hasCollisions(pieces, true) || (piece[0] > 20 || piece[0] < -20) || (piece[1] > 20 || piece[1] < -20)) { // Reset
+            if (/*hasCollisions(pieces, true) || */ (piece[0] > 20 || piece[0] < -19) || (piece[1] > 20 || piece[1] < -19)) { // Reset
                 pieces = [
-                    [0, 0]
+                    [0, 0],
+                    [0, 1],
+                    [0, 2]
                 ];
                 snakedir = 'none';
             }
@@ -48,16 +56,25 @@ $(document).ready(function () {
         }
     }
 
-    function hasCollisions(arr,justCheck){
+    var addCherry = function () {
+        var r1 = Math.floor(Math.random() * (40)) - 19;
+        var r2 = Math.floor(Math.random() * (40)) - 19;
+
+        cherry = [r1, r2];
+    };
+
+    function hasCollisions(arr, justCheck) { // This was stolen. My function didn't work.
         var len = arr.length, tmp = {}, arrtmp = arr.slice(), dupes = [];
         arrtmp.sort();
-        while(len--){
+        while (len--) {
             var val = arrtmp[len];
-            if (/nul|nan|infini/i.test(String(val))){
+            if (/nul|nan|infini/i.test(String(val))) {
                 val = String(val);
             }
-            if (tmp[JSON.stringify(val)]){
-                if (justCheck) {return true;}
+            if (tmp[JSON.stringify(val)]) {
+                if (justCheck) {
+                    return true;
+                }
                 dupes.push(val);
             }
             tmp[JSON.stringify(val)] = true;
@@ -88,7 +105,7 @@ $(document).ready(function () {
         }
 
         if (snakedir !== 'none') {
-            pieces.unshift(newpiece);
+            pieces.unshift(newpiece); // Add new piece in the right direction
             pieces.pop(); // Get rid of last piece
         }
 
@@ -97,7 +114,6 @@ $(document).ready(function () {
         setTimeout(loop, 120);
     }
 
+    addCherry();
     loop();
 });
-
-//280
