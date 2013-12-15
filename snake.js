@@ -35,7 +35,7 @@ $(document).ready(function () {
             addCherry();
         }
 
-        if(hasCollisions(pieces, true)) {
+        if(hasCollisions(pieces)) {
             pieces = [
                 [0, 0],
                 [0, 1],
@@ -70,25 +70,25 @@ $(document).ready(function () {
         var r2 = Math.floor(Math.random() * (20)) - 9;
 
         cherry = [r1, r2];
+
+        if(pieces.indexOf(cherry) !== -1) // To prevent the cherry from being under the snake
+            addCherry();
     };
 
-    function hasCollisions(arr, justCheck) { // This was stolen. My function didn't work.
-        var len = arr.length, tmp = {}, arrtmp = arr.slice(), dupes = [];
-        arrtmp.sort();
-        while (len--) {
-            var val = arrtmp[len];
-            if (/nul|nan|infini/i.test(String(val))) {
-                val = String(val);
-            }
-            if (tmp[JSON.stringify(val)]) {
-                if (justCheck) {
-                    return true;
-                }
-                dupes.push(val);
-            }
-            tmp[JSON.stringify(val)] = true;
+    function hasCollisions(a) {
+        var dups=[], counts={};
+
+        for (var i=0;i<a.length;i++) {
+            var item = a[i];
+            counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
         }
-        return justCheck ? false : dupes.length ? dupes : null;
+
+        for (var item in counts) {
+            if(counts[item] > 1)
+                dups.push(item);
+        }
+
+        return dups.length;
     }
 
     function loop() {
