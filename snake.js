@@ -74,8 +74,8 @@ $(document).ready(function () {
         };
 
         var cherryIntersects = function () {
-            pieces.forEach(function (o) {
-                if (o[0] === cherry[0] && o[1] === cherry[1])
+            pieces.forEach(function (p) {
+                if (p[0] === cherry[0] && p[1] === cherry[1])
                     return true;
             });
 
@@ -131,5 +131,4 @@ $(document).ready(function () {
         loop();
     }
 
-)
-;
+);
