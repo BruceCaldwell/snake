@@ -1,10 +1,7 @@
 $(document).ready(function () {
     // First we'll initialize some variables
 
-    var moves = [
-        ['up', 5],
-        ['left', 0]
-    ]; // This is the array of moves that are initialized every loop.
+    var direction = 'left';
 
     var pieces = [
         [0, 0],
@@ -32,40 +29,36 @@ $(document).ready(function () {
     }
 
     function loop() {
-        var p = 0, move;
+        // Add a new piece in the direction it should be.
 
-        for (var i = moves.length - 1; i > 0; i--) {
-            move = moves[i];
-            var direction = move[0], times = move[1];
+        var newpiece = [];
 
-            if (moves[i + 1] === undefined || times > pieces.length)
-                times = pieces.length;
-            else
-                times += 1;
-
-            for (var t = 0; t < times && pieces[p]; t++, p++) {
-                if (direction === 'left')
-                    pieces[p][0] -= 1;
-                else if (direction === 'right')
-                    pieces[p][0] += 1;
-                else if (direction === 'up')
-                    pieces[p][1] -= 1;
-                else if (direction === 'down')
-                    pieces[p][1] += 1;
-            }
-
-            move[1] += 1;
-
-            console.log(move);
-
-            //if (move[1] > pieces.length && moves[i + 1])
-            //    moves.splice(i, 1);
+        if (direction === 'left') {
+            newpiece.push(pieces[0][0] - 1);
+            newpiece.push(pieces[0][1]);
         }
+        if (direction === 'right') {
+            newpiece.push(pieces[0][0] + 1);
+            newpiece.push(pieces[0][1]);
+        }
+        if (direction === 'up') {
+            newpiece.push(pieces[0][0]);
+            newpiece.push(pieces[0][1] - 1);
+        }
+        if (direction === 'down') {
+            newpiece.push(pieces[0][0]);
+            newpiece.push(pieces[0][1] + 1);
+        }
+
+        pieces.unshift(newpiece);
+        pieces.pop(); // Get rid of last piece
+
+        console.log(newpiece);
+        console.log(pieces);
 
         renderSnake();
 
-        if ((pieces[0][0] < 20 && pieces[0][0] > -19) && (pieces[0][1] < 20 && pieces[0][1] > -20))
-            setTimeout(loop, 120);
+        setTimeout(loop, 120);
     }
 
     loop();
