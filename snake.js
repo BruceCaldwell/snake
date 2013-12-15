@@ -2,8 +2,8 @@ $(document).ready(function () {
     // First we'll initialize some variables
 
     var moves = [
-        ['left', 0],
-        ['up', 1]
+        ['up', 5],
+        ['left', 0]
     ]; // This is the array of moves that are initialized every loop.
 
     var pieces = [
@@ -32,17 +32,18 @@ $(document).ready(function () {
     }
 
     function loop() {
-        var p = 0 , move, m;
+        var p = 0, move;
 
-        for (var i = 0; i < moves.length; i++) {
+        for (var i = moves.length - 1; i > 0; i--) {
             move = moves[i];
             var direction = move[0], times = move[1];
 
-            if (moves[i + 1] === undefined)
+            if (moves[i + 1] === undefined || times > pieces.length)
                 times = pieces.length;
+            else
+                times += 1;
 
             for (var t = 0; t < times && pieces[p]; t++, p++) {
-
                 if (direction === 'left')
                     pieces[p][0] -= 1;
                 else if (direction === 'right')
@@ -54,6 +55,11 @@ $(document).ready(function () {
             }
 
             move[1] += 1;
+
+            console.log(move);
+
+            //if (move[1] > pieces.length && moves[i + 1])
+            //    moves.splice(i, 1);
         }
 
         renderSnake();
